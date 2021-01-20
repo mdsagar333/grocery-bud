@@ -20,6 +20,8 @@ const GroceryContainer = () => {
     const addItem = () => {
         if (name.length < 1){
             showAlert(true, 'danger', 'Please insert something!')
+        }else if(editable){
+            updateItem(itemID);
         }else{
         setList([...lists, {id: new Date().getTime(), title: name}]);
         showAlert(true, 'success', 'item added')
@@ -30,6 +32,8 @@ const GroceryContainer = () => {
     const deleteItem = (id) => {
         setList(lists.filter(item => item.id !== id));
         setName('')
+        setEditable(false);
+        setItemID(null)
         showAlert(true, 'danger', 'Item deleted')
     }
 
@@ -51,6 +55,8 @@ const GroceryContainer = () => {
 
         setList(items);
         setName('');
+        setEditable(false);
+        setItemID(null)
         showAlert(true, 'success', 'Item updated');
     }
 
@@ -76,6 +82,7 @@ const GroceryContainer = () => {
             {lists.length > 0 &&
                 lists.map(item => <Grocery key={item.id} data={{...item, deleteItem: deleteItem, editItem: editItem}}/>)
             }
+            {lists.length > 0 && <button className='clear-btn' onClick={() => setList([])}>clear list</button>}
         </main>
      );
 }

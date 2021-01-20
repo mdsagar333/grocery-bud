@@ -1,7 +1,7 @@
 import React from 'react';
 
 const InputData = (props) => {
-    const {name, changeHandler, edit, addItem, updateItem, itemID} = props.data;
+    const {name, changeHandler, edit, addItem} = props.data;
     const btnText = edit ? 'edit' : 'submit';
     return ( 
         <section className="input-container">
@@ -14,7 +14,7 @@ const InputData = (props) => {
                     value={name}
                     onChange={changeHandler}
                 />
-                <button className='btn-grocery' onClick={edit? () => updateItem(itemID): addItem}>{btnText}</button>
+                <button className='btn-grocery' onClick={addItem}>{btnText}</button>
             </form>
         </section>
      );

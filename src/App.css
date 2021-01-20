@@ -126,3 +126,28 @@
   background: #F8D7DA;
   color: #721C24;
 }
+
+.clear-btn {
+  border: 2px solid transparent;
+  background-color: transparent;
+  text-transform: capitalize;
+  width: 110px;
+  margin: 25px auto 0px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 500;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+  color: #831C3C;
+  transition: 0.4s border;
+  padding: 8px 15px;
+  border-radius: 4px;
+}
+
+.clear-btn:hover {
+  border: 2px solid #831C3C;
+  color: #333;
+
+}
