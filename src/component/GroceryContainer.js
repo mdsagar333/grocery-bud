@@ -2,88 +2,80 @@ import React, {useState, useEffect} from 'react';
 import InputData from './InputData';
 import Grocery from './Grocery/Grocery';
 
-
+const BringItems = () => {
+    return JSON.parse(window.localStorage.getItem('lists'))
+}
 
 const GroceryContainer = () => {
-    const [item, setItem] = useState('');
-    const [lists, setList] = useState([]);
-    const [edit, setEdit] = useState(false);
-    const [updateId, setUpdateId] = useState(null);
-    const [message, setMessage] = useState(false);
-    const [dependecy, setDependency] = useState(false);
-
+    const [name, setName] = useState('');
+    const [lists, setList] = useState(BringItems());
+    const [editable, setEditable] = useState(false);
+    const [alert, setAlert] = useState({show: false, type:'', msg:''})
+    const [itemID, setItemID] = useState(null)
 
     const changeHandler = (e) => {
-        const item = e.target.value;
-        setItem(item);        
+        setName(e.target.value)
     }
 
     const addItem = () => {
-        const newList = JSON.parse(window.localStorage.getItem('lists'));        
-        newList.push({text: item, id: newList.length});
-        window.localStorage.setItem('lists',JSON.stringify(newList));
-        setList(newList);
-        setItem('');
-        setMessage(!message);
-        setDependency(true);       
-        
-    }
-
-    const updateItem = (id) => {       
-        const totalList = JSON.parse(window.localStorage.getItem('lists'));
-        const updatedList = totalList.map(element => {
-            if (element.id === id){
-                element.text = item;                
-            }
-            return element;
-        });
-        
-        window.localStorage.setItem('lists',JSON.stringify(updatedList));
-        setList(updatedList);
-        setEdit(false);
-        setItem('');
-
+        if (name.length < 1){
+            showAlert(true, 'danger', 'Please insert something!')
+        }else{
+        setList([...lists, {id: new Date().getTime(), title: name}]);
+        showAlert(true, 'success', 'item added')
+        setName('');
+        }
     }
 
     const deleteItem = (id) => {
-        const totalList = JSON.parse(window.localStorage.getItem('lists'));
-        const freshList = totalList.filter(item => item.id !== id);
-        window.localStorage.setItem('lists',JSON.stringify(freshList));
-        setList(freshList);
+        setList(lists.filter(item => item.id !== id));
+        setName('')
+        showAlert(true, 'danger', 'Item deleted')
     }
 
     const editItem = (id) => {
-        const totalList = JSON.parse(window.localStorage.getItem('lists'));
-        const editeItem = totalList.filter(item => item.id === id);
-        setItem(editeItem[0]['text']);
-        setUpdateId(editeItem[0]['id']);
-        setEdit(true)
+        const item = lists.filter(ele => ele.id === id);        
+        setName(item[0].title);
+        setEditable(true);
+        setItemID(item[0].id);
+        showAlert();
     }
-    
+
+    const updateItem = (id) => {
+        const items = lists.map(ele => {
+            if (ele.id === id){
+                ele = {...ele, title: name}
+            }
+            return ele;
+        })
+
+        setList(items);
+        setName('');
+        showAlert(true, 'success', 'Item updated');
+    }
+
+    const showAlert = (show=false, type="", msg="") => {        
+        setAlert({show, type, msg});
+    }
+
+
+    useEffect(() =>{
+        window.localStorage.setItem('lists', JSON.stringify(lists));
+    }, [lists])
+
     useEffect(() => {
-        if (!JSON.parse(window.localStorage.getItem('lists'))){
-            window.localStorage.setItem('lists', JSON.stringify(lists));
-        }else {
-           setList(JSON.parse(window.localStorage.getItem('lists')));
-        }
-    },[]);
-
-    // useEffect(() => {
-    //     const added = setTimeout(() => {
-    //         setMessage(!message);
-    //     }, 2000);
-
-    //     return () => clearTimeout(added);
-    // }, [dependecy])
-
+        const timeOut = setTimeout(() =>{
+            showAlert(false, '', '');
+        }, 3000)
+        return () => clearTimeout(timeOut)
+    })
     return ( 
         <main className='grocery-container'>
-            <InputData handlers={{stateHandeler: changeHandler, itemHandler: addItem, stateValue: item , editValue: edit, updateItem: updateItem, updateId: updateId}}/>
-            {lists.length > 0 
-            && 
-            lists.map((list,index) => <Grocery key={index} data={list}  controller={{deleteItem: deleteItem, editItem:editItem}}/>)
+            {alert.show && <p className={`alert alert-${alert.type}`}>{alert.msg}</p>}
+            <InputData data={{name: name, changeHandler: changeHandler, edit: editable, addItem: addItem, updateItem: updateItem, itemID: itemID}}/>
+            {lists.length > 0 &&
+                lists.map(item => <Grocery key={item.id} data={{...item, deleteItem: deleteItem, editItem: editItem}}/>)
             }
-            {message && <span className='message-box'>Item added</span>}
         </main>
      );
 }

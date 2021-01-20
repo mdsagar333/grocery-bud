@@ -1,8 +1,8 @@
 import React from 'react';
 
 const InputData = (props) => {
-    const {stateHandeler, itemHandler, stateValue ,editValue, updateItem, updateId} = props.handlers;
-    const btnValue = editValue ? 'Edit' : 'Submit';
+    const {name, changeHandler, edit, addItem, updateItem, itemID} = props.data;
+    const btnText = edit ? 'edit' : 'submit';
     return ( 
         <section className="input-container">
             <form className='grocery-form' onSubmit={(e) => e.preventDefault()}>
@@ -11,10 +11,10 @@ const InputData = (props) => {
                     className="input-field" 
                     name="addGrocery" 
                     placeholder='e.g. eggs'
-                    value={stateValue}
-                    onChange={(e) => stateHandeler(e)}
+                    value={name}
+                    onChange={changeHandler}
                 />
-                <button className='btn-grocery' onClick={editValue? () => updateItem(updateId):itemHandler}>{btnValue}</button>
+                <button className='btn-grocery' onClick={edit? () => updateItem(itemID): addItem}>{btnText}</button>
             </form>
         </section>
      );

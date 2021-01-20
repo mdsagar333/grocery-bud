@@ -3,11 +3,10 @@ import {AiFillDelete, AiFillPropertySafety} from 'react-icons/ai';
 import {BiEdit} from 'react-icons/bi'
 
 const Grocery = (props) => {
-    const {text, id} = props.data;
-    const {deleteItem , editItem} = props.controller;
+    const {title, id , deleteItem, editItem} = props.data;
     return ( 
         <article className="grocery-list">
-            <p>{text}</p>
+            <p>{title}</p>
             <section className='btn-controller'>
                 <button className='btn_controller btn-edit' onClick={() => editItem(id)}><BiEdit/></button>
                 <button className='btn_controller btn-delete' onClick={() => deleteItem(id)}><AiFillDelete /></button>                

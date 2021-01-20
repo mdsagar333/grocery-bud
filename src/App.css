@@ -107,16 +107,22 @@
   color: #25BB32;
 }
 
-.message-box {
+.alert {
   position: absolute;
-  top: 15px;
+  top: 0;
   left: 50%;
   transform: translateX(-50%);
-  background-color: #D4EDDA;
-  font-size: .7rem;
-  letter-spacing: 2px;
-  font-weight: 700;
-  padding: 2px 0px;
-  width: 88%;
+  width: 93%;
   text-align: center;
+  font-size: .9rem;
+}
+
+.alert-success {
+  background: #D4EDDA;
+  color: #155724;
+}
+
+.alert-danger {
+  background: #F8D7DA;
+  color: #721C24;
 }
